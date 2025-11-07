@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
 
-public class owentestcode extends LinearOpMode {
+public class DriveCode extends LinearOpMode {
     //speeds
     //static final int turretSpeed = 2000;
     int driveSpeed = 800;
@@ -46,8 +46,6 @@ public class owentestcode extends LinearOpMode {
     private DcMotorEx flyWheelLeft;
     //intake
     private DcMotorEx intake;
-    //turret
-    private DcMotorEx turret;
     //servos
     private CRServo outZero;
     private CRServo outOne;
@@ -87,7 +85,7 @@ public class owentestcode extends LinearOpMode {
             double oneRightStickY = gamepad1.right_stick_y;
             double oneLeftStickX = gamepad1.left_stick_x;
             double twoLeftStickY = gamepad2.left_stick_y;
-            double twoRightStickX = gamepad2.right_stick_x
+            double twoRightStickX = gamepad2.right_stick_x;
             //boost
             if (gamepad1.right_bumper) {
                 boost = 1000;    
@@ -103,7 +101,7 @@ public class owentestcode extends LinearOpMode {
             flyWheelLeft.setPower(-twoLeftStickY * flyWheelSpeed);
             flyWheelRight.setPower(twoLeftStickY * flyWheelSpeed);
             //turret
-            turret.setPower(twoRightStickX) 
+            turret.setPower(twoRightStickX);
             //intake
             if (gamepad2.left_bumper) {
                 intake.setPower(-1);

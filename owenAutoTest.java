@@ -9,14 +9,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 public class owenAutoTest extends LinearOpMode {
-
-    int driveSpeed = 800;
     
     private DcMotorEx driveMotorBL;
     private DcMotorEx driveMotorFL;
     private DcMotorEx driveMotorBR;
     private DcMotorEx driveMotorFR;
-    
 
     @Override
     public void runOpMode() {
@@ -34,20 +31,114 @@ public class owenAutoTest extends LinearOpMode {
         driveMotorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveMotorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         
-        //leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        //rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        driveMotorBL.setDirection(DcMotor.Direction.REVERSE);
+        driveMotorFL.setDirection(DcMotor.Direction.REVERSE);
 
-        //leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveMotorBL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveMotorBR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveMotorFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveMotorFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // Wait for the game to start (driver presses START)
         waitForStart();
-
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
+                FBWithTicks(1000);
+                strafeRight(1000);
+                turnRight(1000);
+            }
+        }
     }
+}
+
+private void FBWithTicks(int ticks) {
+    driveMotorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    driveMotorBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    driveMotorFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    driveMotorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    driveMotorBL.setTargetPosition(ticks);
+    driveMotorBR.setTargetPosition(ticks);
+    driveMotorFL.setTargetPosition(ticks);
+    driveMotorFR.setTargetPosition(ticks);
+
+    driveMotorBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    driveMotorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    driveMotorFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    driveMotorFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    while (driveMotorFL.isBusy() || driveMotorBR.isBusy()) {
+        driveMotorBL.setVelocity(1000);
+        driveMotorBR.setVelocity(1000);
+        driveMotorFL.setVelocity(1000);
+        driveMotorFR.setVelocity(1000);
+        telemetry.addData("left", driveMotorFL.getPower());
+        telemetry.update();
+    }
+
+    driveMotorBL.setPower(0);
+    driveMotorBR.setPower(0);
+    driveMotorFL.setPower(0);
+    driveMotorFR.setPower(0);
+}
+
+private void strafeRight(int ticks) {
+    driveMotorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    driveMotorBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    driveMotorFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    driveMotorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    driveMotorBL.setTargetPosition(-ticks);
+    driveMotorBR.setTargetPosition(ticks);
+    driveMotorFL.setTargetPosition(ticks);
+    driveMotorFR.setTargetPosition(-ticks);
+
+    driveMotorBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    driveMotorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    driveMotorFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    driveMotorFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    while (driveMotorFL.isBusy() || driveMotorBR.isBusy()) {
+        driveMotorBL.setVelocity(1000);
+        driveMotorBR.setVelocity(1000);
+        driveMotorFL.setVelocity(1000);
+        driveMotorFR.setVelocity(1000);
+        telemetry.addData("left", driveMotorFL.getPower());
+        telemetry.update();
+    }
+
+    driveMotorBL.setPower(0);
+    driveMotorBR.setPower(0);
+    driveMotorFL.setPower(0);
+    driveMotorFR.setPower(0);
+}
+
+private void turnRight(int ticks) {
+    driveMotorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    driveMotorBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    driveMotorFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    driveMotorFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    driveMotorBL.setTargetPosition(ticks);
+    driveMotorBR.setTargetPosition(-ticks);
+    driveMotorFL.setTargetPosition(ticks);
+    driveMotorFR.setTargetPosition(-ticks);
+
+    driveMotorBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    driveMotorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    driveMotorFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    driveMotorFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    while (driveMotorFL.isBusy() || driveMotorBR.isBusy()) {
+        driveMotorBL.setVelocity(1000);
+        driveMotorBR.setVelocity(1000);
+        driveMotorFL.setVelocity(1000);
+        driveMotorFR.setVelocity(1000);
+        telemetry.addData("left", driveMotorFL.getPower());
+        telemetry.update();
+    }
+
+    driveMotorBL.setPower(0);
+    driveMotorBR.setPower(0);
+    driveMotorFL.setPower(0);
+    driveMotorFR.setPower(0);
 }

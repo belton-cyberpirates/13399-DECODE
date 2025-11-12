@@ -36,12 +36,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class DriveCode extends LinearOpMode {
     //speeds
-    //static final int turretSpeed = 2000;
+    //static final double turretSpeed = .5;
     int driveSpeed = 800;
     int boost = 0;
-    static final double flyWheelSpeed = .76;
+    static final double flyWheelSpeed = .90;
     //outtake motors
-    private DcMotorEx turret;
+    //private DcMotorEx turret;
     private DcMotorEx flyWheelRight;
     private DcMotorEx flyWheelLeft;
     //intake
@@ -63,7 +63,7 @@ public class DriveCode extends LinearOpMode {
         outOne = hardwareMap.get(CRServo.class, "out1");
         flyWheelRight = hardwareMap.get(DcMotorEx.class, "fly1");
         flyWheelLeft = hardwareMap.get(DcMotorEx.class, "fly2");
-        turret = hardwareMap.get(DcMotorEx.class, "turret");
+        //turret = hardwareMap.get(DcMotorEx.class, "turret");
         driveMotorBL = hardwareMap.get(DcMotorEx.class, "driveBL");
         driveMotorFL = hardwareMap.get(DcMotorEx.class, "driveFL");
         driveMotorBR = hardwareMap.get(DcMotorEx.class, "driveBR");
@@ -84,6 +84,7 @@ public class DriveCode extends LinearOpMode {
             double oneRightStickX = - gamepad1.right_stick_x;
             double oneRightStickY = gamepad1.right_stick_y;
             double oneLeftStickX = gamepad1.left_stick_x;
+            double oneLeftStickY = gamepad1.left_stick_y;
             double twoLeftStickY = gamepad2.left_stick_y;
             double twoRightStickX = gamepad2.right_stick_x;
             //boost
@@ -93,25 +94,30 @@ public class DriveCode extends LinearOpMode {
                 boost = 0;
             }
             //drive
-            driveMotorBL.setVelocity((driveSpeed + boost) * -(oneRightStickX - oneRightStickY + oneLeftStickX));
-            driveMotorFL.setVelocity((driveSpeed + boost) * (oneRightStickX + oneRightStickY - oneLeftStickX));
-            driveMotorBR.setVelocity((driveSpeed + boost) * -(oneRightStickX + oneRightStickY + oneLeftStickX));
-            driveMotorFR.setVelocity((driveSpeed + boost) * (oneRightStickX - oneRightStickY - oneLeftStickX));
+            driveMotorBL.setVelocity((driveSpeed + boost) * (oneLeftStickX + oneLeftStickY + oneRightStickX));
+            driveMotorFL.setVelocity((driveSpeed + boost) * (-oneLeftStickX + oneLeftStickY + oneRightStickX));
+            driveMotorBR.setVelocity((driveSpeed + boost) * (oneLeftStickX - oneLeftStickY + oneRightStickX));
+            driveMotorFR.setVelocity((driveSpeed + boost) * (-oneLeftStickX - oneLeftStickY + oneRightStickX));
             //flywheel
-            flyWheelLeft.setPower(-twoLeftStickY * flyWheelSpeed);
-            flyWheelRight.setPower(twoLeftStickY * flyWheelSpeed);
+            flyWheelLeft.setPower(gamepad2.right_trigger * flyWheelSpeed);
+            flyWheelRight.setPower(-gamepad2.right_trigger * flyWheelSpeed);
             //turret
-            turret.setPower(twoRightStickX);
+            //turret.setPower(twoRightStickX * turretSpeed);
             //intake
-            if (gamepad2.left_bumper) {
+            if (gamepad2.left_trigger > 0) {
                 intake.setPower(-1);
+            } else if (gamepad2.left_bumper){
+                intake.setPower(1);
             } else {
                 intake.setPower(0);
             }
             //servos
-             if (gamepad2.right_bumper) {
+            if (gamepad2.dpad_up) {
                 outZero.setPower(-1);
                 outOne.setPower(1);
+            } else if (gamepad2.dpad_down) {
+                outZero.setPower(1);
+                outOne.setPower(-1);
             } else {
                 outZero.setPower(0);
                 outOne.setPower(0);

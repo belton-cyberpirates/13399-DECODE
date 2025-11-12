@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-
+@Autonomous
 public class owenAutoTest extends LinearOpMode {
     
     private DcMotorEx driveMotorBL;
@@ -42,13 +42,12 @@ public class owenAutoTest extends LinearOpMode {
         waitForStart();
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-                FBWithTicks(1000);
-                strafeRight(1000);
-                turnRight(1000);
+                //100 ticks looks to be 3.5 in.
+                FBWithTicks(100);
+                sleep(1000000);
             }
         }
     }
-}
 
 private void FBWithTicks(int ticks) {
     driveMotorBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -141,4 +140,5 @@ private void turnRight(int ticks) {
     driveMotorBR.setPower(0);
     driveMotorFL.setPower(0);
     driveMotorFR.setPower(0);
+}
 }

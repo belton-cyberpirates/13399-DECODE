@@ -36,12 +36,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class DriveCode extends LinearOpMode {
     //speeds
+    final int FLYSPEED_CLOSE = 1200;
+    final int FLYSPEED_MED = 1560;
+    final int FLYSPEED_FAR = 1920;
+    final int SPEED_TOLERANCE = 200;
     //static final double turretSpeed = .5;
-    int driveSpeed = 800;
+    int driveSpeed = 700;
     int boost = 0;
-    static final double flyWheelSpeed = .90;
+    double flyWheelSpeed;
     //outtake motors
-    //private DcMotorEx turret;
+    private DcMotorEx turret;
     private DcMotorEx flyWheelRight;
     private DcMotorEx flyWheelLeft;
     //intake
@@ -54,6 +58,8 @@ public class DriveCode extends LinearOpMode {
     private DcMotorEx driveMotorFL;
     private DcMotorEx driveMotorBR;
     private DcMotorEx driveMotorFR;
+    
+    double readMotor;
 
     @Override
     public void runOpMode() {
@@ -63,7 +69,7 @@ public class DriveCode extends LinearOpMode {
         outOne = hardwareMap.get(CRServo.class, "out1");
         flyWheelRight = hardwareMap.get(DcMotorEx.class, "fly1");
         flyWheelLeft = hardwareMap.get(DcMotorEx.class, "fly2");
-        //turret = hardwareMap.get(DcMotorEx.class, "turret");
+        turret = hardwareMap.get(DcMotorEx.class, "turret");
         driveMotorBL = hardwareMap.get(DcMotorEx.class, "driveBL");
         driveMotorFL = hardwareMap.get(DcMotorEx.class, "driveFL");
         driveMotorBR = hardwareMap.get(DcMotorEx.class, "driveBR");
@@ -77,6 +83,10 @@ public class DriveCode extends LinearOpMode {
         driveMotorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveMotorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         
+        turret.setTargetPosition(0);
+        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turret.setVelocity(500);
+        
         waitForStart();
         
         while (opModeIsActive()) {
@@ -87,9 +97,13 @@ public class DriveCode extends LinearOpMode {
             double oneLeftStickY = gamepad1.left_stick_y;
             double twoLeftStickY = gamepad2.left_stick_y;
             double twoRightStickX = gamepad2.right_stick_x;
+            
+            readMotor = flyWheelRight.getVelocity();
             //boost
-            if (gamepad1.right_bumper) {
-                boost = 1000;    
+            if (gamepad1.right_trigger > 0.1) {
+                boost = 400;    
+            } else if (gamepad1.left_trigger > 0.1) {
+                boost = -400;    
             } else {
                 boost = 0;
             }
@@ -99,8 +113,32 @@ public class DriveCode extends LinearOpMode {
             driveMotorBR.setVelocity((driveSpeed + boost) * (oneLeftStickX - oneLeftStickY + oneRightStickX));
             driveMotorFR.setVelocity((driveSpeed + boost) * (-oneLeftStickX - oneLeftStickY + oneRightStickX));
             //flywheel
-            flyWheelLeft.setPower(gamepad2.right_trigger * flyWheelSpeed);
-            flyWheelRight.setPower(-gamepad2.right_trigger * flyWheelSpeed);
+            if (gamepad2.y){
+                flyWheelSpeed = FLYSPEED_FAR;
+            } else if (gamepad2.a){
+                flyWheelSpeed = FLYSPEED_CLOSE;
+            } else {
+                flyWheelSpeed = FLYSPEED_MED;
+            }
+            
+            if (gamepad2.right_bumper){
+                if (readMotor < flyWheelSpeed){
+                    flyWheelLeft.setVelocity(-flyWheelSpeed);
+                    flyWheelRight.setVelocity(flyWheelSpeed);
+                } else {
+                    flyWheelLeft.setVelocity(0);
+                    flyWheelRight.setVelocity(0);
+                }
+            } else {
+                if (readMotor < flyWheelSpeed){
+                    flyWheelLeft.setVelocity(flyWheelSpeed);
+                    flyWheelRight.setVelocity(-flyWheelSpeed);
+                } else {
+                    flyWheelLeft.setVelocity(0);
+                    flyWheelRight.setVelocity(0);
+                }
+            }
+            
             //turret
             //turret.setPower(twoRightStickX * turretSpeed);
             //intake
@@ -122,6 +160,10 @@ public class DriveCode extends LinearOpMode {
                 outZero.setPower(0);
                 outOne.setPower(0);
             }
+
+            telemetry.addData("motor flywheel vel:", readMotor);
+            telemetry.addData("target speed", readMotor);
+            telemetry.update();
         }
     }
 }

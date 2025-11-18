@@ -122,23 +122,10 @@ public class DriveCode extends LinearOpMode {
             }
             
             if (gamepad2.right_bumper){
-                if (readMotor < flyWheelSpeed){
-                    flyWheelLeft.setVelocity(-flyWheelSpeed);
-                    flyWheelRight.setVelocity(flyWheelSpeed);
-                } else {
-                    flyWheelLeft.setVelocity(0);
-                    flyWheelRight.setVelocity(0);
-                }
+                flyWheelSpin(flyWheelSpeed, -1);
             } else {
-                if (readMotor < flyWheelSpeed){
-                    flyWheelLeft.setVelocity(flyWheelSpeed);
-                    flyWheelRight.setVelocity(-flyWheelSpeed);
-                } else {
-                    flyWheelLeft.setVelocity(0);
-                    flyWheelRight.setVelocity(0);
-                }
+                flyWheelSpin(flyWheelSpeed, 1);
             }
-            
             //turret
             //turret.setPower(twoRightStickX * turretSpeed);
             //intake
@@ -164,6 +151,17 @@ public class DriveCode extends LinearOpMode {
             telemetry.addData("motor flywheel vel:", readMotor);
             telemetry.addData("target speed", readMotor);
             telemetry.update();
+        }
+    }
+
+    private void flyWheelSpin(int speed, int direction){
+        //direction is 1 or -1
+        if (readMotor < speed - 200){
+            flyWheelLeft.setPower(direction);
+            flyWheelRight.setPower(-direction);
+        } else if (readMotor > speed + 200){
+            flyWheelLeft.setPower(direction * .5);
+            flyWheelRight.setPower(-direction * .5);
         }
     }
 }

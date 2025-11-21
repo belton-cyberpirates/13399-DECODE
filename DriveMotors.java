@@ -196,14 +196,19 @@ public class DriveMotors {
         double anglePower = imuPidController.PIDControlRadians(targetHeading, heading, delta);
 
         // Set the power of the wheels based off the new movement vector
-        double backLeftPower   = (-forwardPower - horizontalPower + anglePower);
-        double frontLeftPower  = (-forwardPower + horizontalPower + anglePower);
-        double frontRightPower = ( forwardPower + horizontalPower + anglePower);
-        double backRightPower  = ( forwardPower - horizontalPower + anglePower);
+        double backLeftPower   = (-forwardPower - horizontalPower + anglePower) * speedMult;
+        double frontLeftPower  = (-forwardPower + horizontalPower + anglePower) * speedMult;
+        double frontRightPower = ( forwardPower + horizontalPower + anglePower) * speedMult;
+        double backRightPower  = ( forwardPower - horizontalPower + anglePower) * speedMult;
+
+        backLeftPower = backLeftPower > 0 ? Math.min(backLeftPower, this.speedMult) : Math.max(backLeftPower, -this.speedMult);
+        frontLeftPower = frontLeftPower > 0 ? Math.min(frontLeftPower, this.speedMult) : Math.max(frontLeftPower, -this.speedMult);
+        frontRightPower = frontRightPower > 0 ? Math.min(frontRightPower, this.speedMult) : Math.max(frontRightPower, -this.speedMult);
+        backRightPower = backRightPower > 0 ? Math.min(backRightPower, this.speedMult) : Math.max(backRightPower, -this.speedMult);
 
         // Find highest motor power value
         double highestPower = Collections.max(Arrays.asList( Math.abs(backLeftPower), Math.abs(frontLeftPower), Math.abs(frontRightPower), Math.abs(backRightPower) ));
-        auto.telemetry.addData("", highestPower);
+        auto.telemetry.addData("DriveMotors highestPower", highestPower);
         // Scale power values if trying to run motors faster than possible
         // if (highestPower > 1) {
         //     backLeftPower /= highestPower;
@@ -239,7 +244,7 @@ public class DriveMotors {
         double dist = distSensor.getDistance(DistanceUnit.MM);
         double error = targetDistance - dist;
         
-        double power = distanceSensorPidController.PIDControl(error, delta) * this.speedMult;
+        double power = distanceSensorPidController.PIDControl(error, delta);
 
         frontLeft.setPower(-power);
         frontRight.setPower(power);

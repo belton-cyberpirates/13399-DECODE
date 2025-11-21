@@ -46,7 +46,7 @@ public class BotConfig {
   *****************************************************************************/
   public static final int AUTO_DRIVE_VELOCITY = 1000;
   public static final int AUTO_PUSHER_VELOCITY = 600;
-  public static final int AUTO_INTAKE_VELOCITY = 600;
+  public static final int AUTO_INTAKE_VELOCITY = 2500;
   public static final int AUTO_LAUNCHER_VELOCITY = 1425;
   // ---------------------------------------------------------------------------
 

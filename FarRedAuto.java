@@ -35,7 +35,7 @@ public class FarRedAuto extends Auto {
             new StopPusher(this),
 
             // Move to first line
-            new Move(this, 691, -405, 90),
+            new Move(this, 691, 0, 90),
 
             // Intake artifacts
             new SpinIntake(this),
@@ -61,19 +61,19 @@ public class FarRedAuto extends Auto {
             // If we have more time 
 
             // Move to second line
-            new Move(this, 1250, -405, -90),
+            new Move(this, 1250, 0, 90),
 
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1), 
-            new Move(this, 1250, -805, -90), 
+            new Move(this, 1250, -805, 90), 
 
             // I don't think we have any chance of shooting these artifacts, if we even have time to grab them
             
             // End sequence
 
             // Move out of triangle
-            new Move(this, 500, 0, -22),
+            new Move(this, 600, 0, 22),
 
 
 

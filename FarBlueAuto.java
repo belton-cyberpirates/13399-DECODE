@@ -19,7 +19,7 @@ public class FarBlueAuto extends Auto {
             // NOT FINISHED
                 
             // Move to shooting position
-            new Move(this, 180, 0, -22.5),
+            new Move(this, 180, 0, -21),
             
             // Shoot preloads
             new SpinLauncherFast(this),
@@ -27,7 +27,7 @@ public class FarBlueAuto extends Auto {
             new Wait(this, 750),
             new SpinIntake(this),
             new SpinPusher(this),
-            new Wait(this, 5500),
+            new Wait(this, 5000),
 
             // Reset
             new StopLauncher(this),
@@ -40,10 +40,10 @@ public class FarBlueAuto extends Auto {
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1), 
-            new Move(this, 691, 805, -90),
+            new Move(this, 691, 1150, -90),
 
             // Move back to shooting position, while intaking to not lose artifacts
-            new Move(this, 180, 0, -22.5, 0.4), // same as first shooting position
+            new Move(this, 180, 0, -22.5, 0.2), // same as first shooting position
 
             // Shoot artifacts
             new SpinLauncherFast(this),
@@ -51,7 +51,7 @@ public class FarBlueAuto extends Auto {
             new Wait(this, 750),
             new SpinIntake(this),
             new SpinPusher(this),
-            new Wait(this, 5500),
+            new Wait(this, 5000),
 
             // Reset
             new StopLauncher(this),
@@ -61,19 +61,19 @@ public class FarBlueAuto extends Auto {
             // If we have more time 
 
             // Move to second line
-            new Move(this, 1250, 405, -90),
+            new Move(this, 1300, 405, -90),
 
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1), 
-            new Move(this, 1250, 805, -90), 
+            new Move(this, 1300, 1150, -90, 0.2), 
 
             // I don't think we have any chance of shooting these artifacts, if we even have time to grab them
             
             // End sequence
 
             // Move out of triangle
-            new Move(this, 500, 0, -22),
+            new Move(this, 600, 0, -21),
 
 
 

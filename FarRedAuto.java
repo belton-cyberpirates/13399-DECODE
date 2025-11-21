@@ -41,7 +41,7 @@ public class FarRedAuto extends Auto {
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1), 
-            new Move(this, 691, -1255, 90, 0.2),
+            new Move(this, 691, -1150, 90, 0.2),
 
             // Move back to shooting position, while intaking to not lose artifacts
             new Move(this, 180, 0, 21), // same as first shooting position
@@ -68,14 +68,14 @@ public class FarRedAuto extends Auto {
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1), 
-            new Move(this, 1300, -1255, 90, 0.2), 
+            new Move(this, 1300, -1150, 90, 0.2), 
 
             // I don't think we have any chance of shooting these artifacts, if we even have time to grab them
             
             // End sequence
 
             // Move out of triangle
-            new Move(this, 600, 0, 22),
+            new Move(this, 600, 0, 21),
 
 
 

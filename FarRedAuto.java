@@ -16,8 +16,11 @@ public class FarRedAuto extends Auto {
         Action[] actions = {
             // ======================= AUTO START ======================= //
                 
-            // NOT FINISHED
-                
+            // FINISHED
+
+            // Set turret offset
+            new TurretOffset(this, BotConfig.TURRET_OFFSET_FAR_RED),
+
             // Move to shooting position
             new Move(this, 180, 0, 0),
             

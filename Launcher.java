@@ -31,6 +31,7 @@ public class Launcher {
     ElapsedTime deltaTimer = new ElapsedTime();
 
     int launcherTargetVelocity = 0;
+    double turretOffset = 0;
 
 
     public Launcher(LinearOpMode auto) {
@@ -107,13 +108,13 @@ public class Launcher {
             turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             
             double turretPower = turretPIDController.PIDControl(
-                result.getTx() - 1.5,
+                result.getTx() - turretOffset,
                 deltaTime
             );
         
-            if (turret.getCurrentPosition() > 300) {
+            if (turret.getCurrentPosition() > BotConfig.TURRET_MAX_OFFSET) {
                 turret.setPower(-.5);
-            } else if (turret.getCurrentPosition() < -300) {
+            } else if (turret.getCurrentPosition() < -BotConfig.TURRET_MAX_OFFSET) {
                 turret.setPower(.5);
             } else {
                 turret.setPower(turretPower);
@@ -140,7 +141,11 @@ public class Launcher {
         return (int)launcherRight.getVelocity();
     }
     
+    public void setTurretOffset(double turretOffset) {
+        this.turretOffset = turretOffset;
+    }
+
     public void setTurretActive(boolean val) {
-        turretActive = val;
+        this.turretActive = val;
     }
 }

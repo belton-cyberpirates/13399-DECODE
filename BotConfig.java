@@ -71,6 +71,10 @@ public class BotConfig {
   ** LAUNCHER CONSTANTS
   *****************************************************************************/
   public static final int LAUNCHER_VELOCITY_MARGIN = 15;
+  public static final int TURRET_MAX_OFFSET = 300;
+  
+  public static final double TURRET_OFFSET_FAR_RED = 1.5;
+  public static final double TURRET_OFFSET_FAR_BLUE = 0.5;
   // ---------------------------------------------------------------------------
 
 

@@ -18,6 +18,9 @@ public class FarBlueAuto extends Auto {
                 
             // NOT FINISHED
                 
+            // Set turret offset
+            new TurretOffset(this, BotConfig.TURRET_OFFSET_FAR_BLUE),
+
             // Move to shooting position
             new Move(this, 180, 0, 0),
             

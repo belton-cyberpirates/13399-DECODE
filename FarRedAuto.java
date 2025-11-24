@@ -19,10 +19,11 @@ public class FarRedAuto extends Auto {
             // NOT FINISHED
                 
             // Move to shooting position
-            new Move(this, 180, 0, 21),
+            new Move(this, 180, 0, 0),
             
             // Shoot preloads
             new SpinLauncherFast(this),
+            new ActivateTurret(this),
             new WaitForLauncher(this),
             new Wait(this, 750),
             new SpinIntake(this),
@@ -33,6 +34,7 @@ public class FarRedAuto extends Auto {
             new StopLauncher(this),
             new StopIntake(this),
             new StopPusher(this),
+            new DeactivateTurret(this),
 
             // Move to first line
             new Move(this, 691, 0, 90),
@@ -41,13 +43,14 @@ public class FarRedAuto extends Auto {
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1), 
-            new Move(this, 691, -1150, 90, 0.2),
+            new Move(this, 691, -1050, 90),
 
             // Move back to shooting position, while intaking to not lose artifacts
-            new Move(this, 180, 0, 21), // same as first shooting position
+            new Move(this,  180, 0, 22, 0.5), // same as first shooting position
 
             // Shoot artifacts
             new SpinLauncherFast(this),
+            new ActivateTurret(this),
             new WaitForLauncher(this),
             new Wait(this, 750),
             new SpinIntake(this),
@@ -58,6 +61,7 @@ public class FarRedAuto extends Auto {
             new StopLauncher(this),
             new StopIntake(this),
             new StopPusher(this),
+            new DeactivateTurret(this),
 
             // If we have more time 
 
@@ -68,14 +72,10 @@ public class FarRedAuto extends Auto {
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1), 
-            new Move(this, 1300, -1150, 90, 0.2), 
+            new Move(this, 1300, -1050, 90), 
 
             // I don't think we have any chance of shooting these artifacts, if we even have time to grab them
             
-            // End sequence
-
-            // Move out of triangle
-            new Move(this, 600, 0, 21),
 
 
 

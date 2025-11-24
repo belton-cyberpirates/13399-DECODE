@@ -107,7 +107,7 @@ public class Launcher {
             turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             
             double turretPower = turretPIDController.PIDControl(
-                result.getTx(),
+                result.getTx() - 1.5,
                 deltaTime
             );
         

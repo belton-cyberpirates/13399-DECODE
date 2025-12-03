@@ -13,6 +13,7 @@ public class BotConfig {
   public static final String INTAKE_NAME = "intake";
   public static final String PUSHER_LEFT_NAME = "out0";
   public static final String PUSHER_RIGHT_NAME = "out1";
+  public static final String STOPPER_NAME = "stopper";
 
   public static final String TURRET_NAME = "turret";
   
@@ -60,14 +61,6 @@ public class BotConfig {
 
 
   /*****************************************************************************
-  ** INTAKE CONSTANTS
-  *****************************************************************************/
-  public static final double STOPPER_OPEN_POS = 0.075;
-  public static final double STOPPER_CLOSE_POS = 0.25;
-  // ---------------------------------------------------------------------------
-
-
-  /*****************************************************************************
   ** LAUNCHER CONSTANTS
   *****************************************************************************/
   public static final int LAUNCHER_VELOCITY_MARGIN = 15;
@@ -77,6 +70,9 @@ public class BotConfig {
   public static final double TURRET_OFFSET_FAR_BLUE = .6;
   public static final double TURRET_OFFSET_CLOSE_BLUE = -0.5; // test to find
   public static final double TURRET_OFFSET_CLOSE_RED = 0.5; // test to find
+
+  public static final double STOPPER_OPEN_POS = 0.47;
+  public static final double STOPPER_CLOSE_POS = 0.3;
   // ---------------------------------------------------------------------------
 
 

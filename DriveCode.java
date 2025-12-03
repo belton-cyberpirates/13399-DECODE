@@ -184,7 +184,7 @@ public class DriveCode extends LinearOpMode {
                 intake.setPower(-1);
                 outZero.setPower(-1);
                 outOne.setPower(1);
-                stopper.setPosition(.47);
+                stopper.setPosition(BotConfig.STOPPER_OPEN_POS);
             } else if (gamepad2.left_bumper) {
                 intake.setPower(1);
                 outZero.setPower(1);
@@ -193,7 +193,7 @@ public class DriveCode extends LinearOpMode {
                 intake.setPower(0);
                 outZero.setPower(0);
                 outOne.setPower(0);
-                stopper.setPosition(.3);
+                stopper.setPosition(BotConfig.STOPPER_CLOSE_POS);
             }
 
             telemetry.addData("tag size", result.getTa());

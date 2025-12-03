@@ -25,6 +25,7 @@ public class Launcher {
     public DcMotorEx turret;
     boolean turretActive;
     public Limelight3A limelight;
+    Servo stopper;
     
     PIDFController launcherPIDFController = new PIDFController(0.0004, 0.008, 0, 0);
     PIDController turretPIDController = new PIDController(0.0325, 0.000, 0.0);
@@ -44,6 +45,7 @@ public class Launcher {
         this.launcherRight = auto.hardwareMap.get(DcMotorEx.class, BotConfig.LAUNCHER_RIGHT_NAME);
         this.limelight = auto.hardwareMap.get(Limelight3A.class, "Ethernet Device");
         this.turret = auto.hardwareMap.get(DcMotorEx.class, BotConfig.TURRET_NAME);
+        this.stopper = auto.hardware.get(Servo.class, BotConfig.STOPPER_NAME);
         
         limelight.setPollRateHz(100);
         limelight.start();
@@ -157,5 +159,9 @@ public class Launcher {
 
     public void setTurretActive(boolean val) {
         this.turretActive = val;
+    }
+
+    public void setStopper(boolean open) {
+        this.stopper.setPosition(open ? BotConfig.STOPPER_OPEN_POS : BotConfig.STOPPER_CLOSE_POS); 
     }
 }

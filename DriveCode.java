@@ -23,6 +23,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.LED;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -31,6 +40,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.LED;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 @TeleOp
 
@@ -38,28 +49,34 @@ public class DriveCode extends LinearOpMode {
     //speeds
     final int FLYSPEED_CLOSE = 1200;
     final int FLYSPEED_MED = 1560;
-    final int FLYSPEED_FAR = 1920;
-    final int SPEED_TOLERANCE = 200;
-    //static final double turretSpeed = .5;
-    int driveSpeed = 700;
+    final int FLYSPEED_FAR = 2070;
+    int driveSpeed = 1200;
+    int boostSpeed = 800;
     int boost = 0;
-    double flyWheelSpeed;
-    //outtake motors
-    private DcMotorEx turret;
-    private DcMotorEx flyWheelRight;
-    private DcMotorEx flyWheelLeft;
+    
     //intake
     private DcMotorEx intake;
     //servos
     private CRServo outZero;
     private CRServo outOne;
+    private Servo stopper;
     //drivemotors
     private DcMotorEx driveMotorBL;
     private DcMotorEx driveMotorFL;
     private DcMotorEx driveMotorBR;
     private DcMotorEx driveMotorFR;
+    //leds
+    private LED led1green;
+    private LED led2green;
+    private LED led1red;
+    private LED led2red;
+    private DistanceSensor distance;
     
-    double readMotor;
+    DriveMotors driveMotors;
+    Launcher launcher;
+    
+    double headingOffset = 0;
+    
 
     @Override
     public void runOpMode() {
@@ -67,13 +84,19 @@ public class DriveCode extends LinearOpMode {
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         outZero = hardwareMap.get(CRServo.class, "out0");
         outOne = hardwareMap.get(CRServo.class, "out1");
-        flyWheelRight = hardwareMap.get(DcMotorEx.class, "fly1");
-        flyWheelLeft = hardwareMap.get(DcMotorEx.class, "fly2");
-        turret = hardwareMap.get(DcMotorEx.class, "turret");
+        stopper = hardwareMap.get(Servo.class, "stopper");
         driveMotorBL = hardwareMap.get(DcMotorEx.class, "driveBL");
         driveMotorFL = hardwareMap.get(DcMotorEx.class, "driveFL");
         driveMotorBR = hardwareMap.get(DcMotorEx.class, "driveBR");
         driveMotorFR = hardwareMap.get(DcMotorEx.class, "driveFR");
+        led1green = hardwareMap.get(LED.class, "led1green");
+        led2green = hardwareMap.get(LED.class, "led2green");
+        led1red = hardwareMap.get(LED.class, "led1red");
+        led2red = hardwareMap.get(LED.class, "led2red");
+        distance = hardwareMap.get(DistanceSensor.class, "distance");
+        
+        driveMotors = new DriveMotors(this);
+        launcher = new Launcher(this);
         
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -83,13 +106,17 @@ public class DriveCode extends LinearOpMode {
         driveMotorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveMotorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         
-        turret.setTargetPosition(0);
-        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        turret.setVelocity(500);
-        
         waitForStart();
         
         while (opModeIsActive()) {
+            
+            if (gamepad1.y) {
+                headingOffset = driveMotors.heading;
+            }
+            
+            driveMotors.process();
+            launcher.process();
+            launcher.setTurretActive(gamepad2.a);
             
             double oneRightStickX = - gamepad1.right_stick_x;
             double oneRightStickY = gamepad1.right_stick_y;
@@ -98,70 +125,80 @@ public class DriveCode extends LinearOpMode {
             double twoLeftStickY = gamepad2.left_stick_y;
             double twoRightStickX = gamepad2.right_stick_x;
             
-            readMotor = flyWheelRight.getVelocity();
-            //boost
-            if (gamepad1.right_trigger > 0.1) {
-                boost = 400;    
-            } else if (gamepad1.left_trigger > 0.1) {
-                boost = -400;    
+            //lights
+            if (distance.getDistance(DistanceUnit.CM) < 5) {
+                led1green.enable(false);
+                led2green.enable(false);
+                led2red.enable(true);
+                led1red.enable(true);
             } else {
-                boost = 0;
-            }
-            //drive
-            driveMotorBL.setVelocity((driveSpeed + boost) * (oneLeftStickX + oneLeftStickY + oneRightStickX));
-            driveMotorFL.setVelocity((driveSpeed + boost) * (-oneLeftStickX + oneLeftStickY + oneRightStickX));
-            driveMotorBR.setVelocity((driveSpeed + boost) * (oneLeftStickX - oneLeftStickY + oneRightStickX));
-            driveMotorFR.setVelocity((driveSpeed + boost) * (-oneLeftStickX - oneLeftStickY + oneRightStickX));
-            //flywheel
-            if (gamepad2.y){
-                flyWheelSpeed = FLYSPEED_FAR;
-            } else if (gamepad2.a){
-                flyWheelSpeed = FLYSPEED_CLOSE;
-            } else {
-                flyWheelSpeed = FLYSPEED_MED;
+                led2red.enable(false);
+                led1red.enable(false);
             }
             
-            if (gamepad2.right_bumper){
-                flyWheelSpin(flyWheelSpeed, -1);
-            } else {
-                flyWheelSpin(flyWheelSpeed, 1);
+            //boost
+            boost = (int)((gamepad1.right_trigger - gamepad1.left_trigger) * boostSpeed);
+            
+            //drive
+            if (gamepad1.a) {
+                driveMotors.DriveFieldCentric(gamepad1.left_stick_x,
+                    gamepad1.left_stick_y, 
+                    gamepad1.right_stick_x, 
+                    driveSpeed + boost,
+                    headingOffset
+                );
             }
+            else {
+                driveMotors.Drive(gamepad1.left_stick_x,
+                    gamepad1.left_stick_y, 
+                    gamepad1.right_stick_x, 
+                    driveSpeed + boost
+                );
+            }
+            
             //turret
-            //turret.setPower(twoRightStickX * turretSpeed);
+            LLResult result = launcher.limelight.getLatestResult();
+            double tagSize = result.getTa();
+            if (tagSize <= 0.6 && tagSize != 0) {
+                launcher.setDistance(Distance.FAR);
+            }
+            else {
+                launcher.setDistance(Distance.CLOSE);
+            }
+            
+            //flywheel
+            if (gamepad2.left_stick_y > 0) {
+                launcher.SetVelocity(FLYSPEED_CLOSE);
+            } else if (gamepad2.left_stick_y < 0) {
+                launcher.SetVelocity(FLYSPEED_FAR);
+            } else {
+                launcher.SetVelocity(FLYSPEED_MED);
+            }
+            
             //intake
             if (gamepad2.left_trigger > 0) {
                 intake.setPower(-1);
-            } else if (gamepad2.left_bumper){
-                intake.setPower(1);
-            } else {
-                intake.setPower(0);
-            }
-            //servos
-            if (gamepad2.dpad_up) {
+                outZero.setPower(1);
+                outOne.setPower(-1);
+            } else if (gamepad2.right_trigger > 0) {
+                intake.setPower(-1);
                 outZero.setPower(-1);
                 outOne.setPower(1);
-            } else if (gamepad2.dpad_down) {
+                stopper.setPosition(.47);
+            } else if (gamepad2.left_bumper) {
+                intake.setPower(1);
                 outZero.setPower(1);
                 outOne.setPower(-1);
             } else {
+                intake.setPower(0);
                 outZero.setPower(0);
                 outOne.setPower(0);
+                stopper.setPosition(.3);
             }
 
-            telemetry.addData("motor flywheel vel:", readMotor);
-            telemetry.addData("target speed", readMotor);
+            telemetry.addData("tag size", result.getTa());
+            telemetry.addData("tag x", result.getTx());
             telemetry.update();
-        }
-    }
-
-    private void flyWheelSpin(int speed, int direction){
-        //direction is 1 or -1
-        if (readMotor < speed - 200){
-            flyWheelLeft.setPower(direction);
-            flyWheelRight.setPower(-direction);
-        } else if (readMotor > speed + 200){
-            flyWheelLeft.setPower(direction * .5);
-            flyWheelRight.setPower(-direction * .5);
         }
     }
 }

@@ -36,9 +36,9 @@ public class DriveMotors {
     }
 
     public static PIDController distanceSensorPidController = new PIDController(0, 0, 0);
-    public static PIDController forwardPidController = new PIDController(0.00265, 0.00000033, 0.0001);
-    public static PIDController strafePidController = new PIDController(0.00275, 0.0000004, 0.00016);
-    public static PIDController imuPidController = new PIDController(1.8, 0, 0.001);
+    public static PIDController forwardPidController = new PIDController(0.002, 0.0000005, 0.000085);
+    public static PIDController strafePidController = new PIDController(0.0025, 0.00000055, 0.00009);
+    public static PIDController imuPidController = new PIDController(1, 0, 0.001);
 
     static Orientation angles;
 
@@ -173,6 +173,32 @@ public class DriveMotors {
         frontLeft.setPower(frontLeftPower);
         frontRight.setPower(frontRightPower);
         backRight.setPower(backRightPower);
+    }
+    
+    
+    public void Drive(double x, double y, double turn, double speed) {
+        backLeft.setVelocity(speed * (x + y - turn));
+        frontLeft.setVelocity(speed * (-x + y - turn));
+        frontRight.setVelocity(speed * (-x - y - turn));
+        backRight.setVelocity(speed * (x - y - turn));
+    }
+    
+    
+    public void DriveFieldCentric(double x, double y, double turn, double speed, double headingOffset) {
+        
+        double _heading = this.heading - headingOffset;
+        
+        double rotX =
+            x * Math.cos(_heading) -
+            y * Math.sin(_heading);
+        double rotY =
+            x * Math.sin(_heading) +
+            y * Math.cos(_heading);
+        
+        backLeft.setVelocity(speed * (rotX + rotY - turn));
+        frontLeft.setVelocity(speed * (-rotX + rotY - turn));
+        frontRight.setVelocity(speed * (-rotX - rotY - turn));
+        backRight.setVelocity(speed * (rotX - rotY - turn));
     }
 
 

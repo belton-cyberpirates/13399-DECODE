@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -26,12 +27,14 @@ public class Launcher {
     public Limelight3A limelight;
     
     PIDFController launcherPIDFController = new PIDFController(0.0004, 0.008, 0, 0);
-    PIDController turretPIDController = new PIDController(0.035, 0, 0.0005);
+    PIDController turretPIDController = new PIDController(0.0325, 0.000, 0.0);
     
     ElapsedTime deltaTimer = new ElapsedTime();
 
     int launcherTargetVelocity = 0;
-    double turretOffset = 0;
+    double turretCloseOffset = 0;
+    double turretFarOffset = 0;
+    Distance distance = Distance.CLOSE;
 
 
     public Launcher(LinearOpMode auto) {
@@ -108,7 +111,7 @@ public class Launcher {
             turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             
             double turretPower = turretPIDController.PIDControl(
-                result.getTx() - turretOffset,
+                result.getTx() - (distance == Distance.FAR ? turretFarOffset : turretCloseOffset),
                 deltaTime
             );
         
@@ -122,6 +125,7 @@ public class Launcher {
             
             auto.telemetry.addData("Turret Power", turretPower);
             auto.telemetry.addData("Limelight Tx", result.getTx());
+            auto.telemetry.addData("Turret Error", turretPIDController.lastError);
             
         } else {
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -133,6 +137,7 @@ public class Launcher {
         auto.telemetry.addData("Launcher Velocity", getVelocity());
         auto.telemetry.addData("Launcher Target Velocity", launcherTargetVelocity);
         auto.telemetry.addData("Launcher Velocity", launcherPIDFController.lastOutput);
+        auto.telemetry.addData("DT", deltaTime);
         
         return deltaTime;
     }
@@ -141,8 +146,13 @@ public class Launcher {
         return (int)launcherRight.getVelocity();
     }
     
-    public void setTurretOffset(double turretOffset) {
-        this.turretOffset = turretOffset;
+    public void setTurretOffsets(double turretCloseOffset, double turretFarOffset) {
+        this.turretCloseOffset = turretCloseOffset;
+        this.turretFarOffset = turretFarOffset;
+    }
+    
+    public void setDistance(Distance dist) {
+        this.distance = dist;
     }
 
     public void setTurretActive(boolean val) {

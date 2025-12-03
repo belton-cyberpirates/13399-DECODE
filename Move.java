@@ -42,7 +42,7 @@ public class Move extends Action {
 
     public void onStart() {
         startTime = new ElapsedTime();
-        auto.driveMotors.Move(xPos, yPos, heading);
+        auto.driveMotors.Move(xPos, yPos, heading, this.speedMult);
     }
     
     public boolean isDone() {

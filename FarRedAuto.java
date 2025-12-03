@@ -19,7 +19,8 @@ public class FarRedAuto extends Auto {
             // FINISHED
 
             // Set turret offset
-            new TurretOffset(this, BotConfig.TURRET_OFFSET_FAR_RED),
+            new SetTurretOffsets(this, BotConfig.TURRET_OFFSET_CLOSE_RED, BotConfig.TURRET_OFFSET_FAR_RED),
+            new SetLauncherDist(this, Distance.FAR),
 
             // Move to shooting position
             new Move(this, 180, 0, 0),

@@ -1,17 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public class SetTurretOffset extends Action {
+public class SetTurretOffsets extends Action {
     Auto auto;
-    double turretOffset;
+    double turretCloseOffset;
+    double turretFarOffset;
 
-    public SetTurretOffset(Auto auto, double turretOffset) {
+    public SetTurretOffsets(Auto auto, double turretCloseOffset, double turretFarOffset) {
         this.auto = auto;
-        this.turretOffset = turretOffset;
+        this.turretCloseOffset = turretCloseOffset;
+        this.turretFarOffset = turretFarOffset;
     }
 
     public void onStart() {
-        auto.launcher.setTurretOffset(turretOffset); 
+        auto.launcher.setTurretOffsets(turretCloseOffset, turretFarOffset); 
     }
 
     public boolean isDone() {

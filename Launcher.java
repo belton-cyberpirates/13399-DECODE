@@ -45,7 +45,7 @@ public class Launcher {
         this.launcherRight = auto.hardwareMap.get(DcMotorEx.class, BotConfig.LAUNCHER_RIGHT_NAME);
         this.limelight = auto.hardwareMap.get(Limelight3A.class, "Ethernet Device");
         this.turret = auto.hardwareMap.get(DcMotorEx.class, BotConfig.TURRET_NAME);
-        this.stopper = auto.hardware.get(Servo.class, BotConfig.STOPPER_NAME);
+        this.stopper = auto.hardwareMap.get(Servo.class, BotConfig.STOPPER_NAME);
         
         limelight.setPollRateHz(100);
         limelight.start();

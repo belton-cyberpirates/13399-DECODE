@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public class OpenStopper extends Action {
+public class CloseStopper extends Action {
     Auto auto;
 
-    public OpenStopper(Auto auto) {
+    public CloseStopper(Auto auto) {
         this.auto = auto;
     }
 

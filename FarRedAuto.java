@@ -29,16 +29,18 @@ public class FarRedAuto extends Auto {
             new SpinLauncherFast(this),
             new ActivateTurret(this),
             new WaitForLauncher(this),
+            new OpenStopper(this),
             new Wait(this, 750),
             new SpinIntake(this),
             new SpinPusher(this),
             new Wait(this, 5000),
-
+            
             // Reset
             new StopLauncher(this),
             new StopIntake(this),
             new StopPusher(this),
             new DeactivateTurret(this),
+            new CloseStopper(this),
 
             // Move to first line
             new Move(this, 691, 0, 90),
@@ -56,16 +58,18 @@ public class FarRedAuto extends Auto {
             new SpinLauncherFast(this),
             new ActivateTurret(this),
             new WaitForLauncher(this),
+            new OpenStopper(this),
             new Wait(this, 750),
             new SpinIntake(this),
             new SpinPusher(this),
             new Wait(this, 5000),
-
+            
             // Reset
             new StopLauncher(this),
             new StopIntake(this),
             new StopPusher(this),
             new DeactivateTurret(this),
+            new CloseStopper(this),
 
             // If we have more time 
 

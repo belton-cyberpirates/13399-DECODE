@@ -19,7 +19,8 @@ public class FarBlueAuto extends Auto {
             // NOT FINISHED
                 
             // Set turret offset
-            new TurretOffset(this, BotConfig.TURRET_OFFSET_FAR_BLUE),
+            new SetTurretOffsets(this, BotConfig.TURRET_OFFSET_CLOSE_BLUE, BotConfig.TURRET_OFFSET_FAR_BLUE),
+            new SetLauncherDist(this, Distance.FAR),
 
             // Move to shooting position
             new Move(this, 180, 0, 0),
@@ -28,6 +29,7 @@ public class FarBlueAuto extends Auto {
             new SpinLauncherFast(this),
             new ActivateTurret(this),
             new WaitForLauncher(this),
+            new OpenStopper(this),
             new Wait(this, 750),
             new SpinIntake(this),
             new SpinPusher(this),
@@ -38,6 +40,7 @@ public class FarBlueAuto extends Auto {
             new StopIntake(this),
             new StopPusher(this),
             new DeactivateTurret(this),
+            new CloseStopper(this),
 
             // Move to first line
             new Move(this, 691, 0, -90),
@@ -55,6 +58,7 @@ public class FarBlueAuto extends Auto {
             new SpinLauncherFast(this),
             new ActivateTurret(this),
             new WaitForLauncher(this),
+            new OpenStopper(this),
             new Wait(this, 750),
             new SpinIntake(this),
             new SpinPusher(this),
@@ -65,6 +69,7 @@ public class FarBlueAuto extends Auto {
             new StopIntake(this),
             new StopPusher(this),
             new DeactivateTurret(this),
+            new CloseStopper(this),
 
             // If we have more time 
 

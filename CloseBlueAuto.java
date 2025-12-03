@@ -22,17 +22,21 @@ public class CloseBlueAuto extends Auto {
             // new Move(this, ___, ___, ___),
             
             // // Shoot preloads
-            // new SpinLauncher(this),
+            // new SpinLauncherFast(this),
+            // new ActivateTurret(this),
             // new WaitForLauncher(this),
-            // new Wait(this, 500),
+            // new OpenStopper(this),
+            // new Wait(this, 750),
             // new SpinIntake(this),
             // new SpinPusher(this),
-            // new Wait(this, 5500),
-
+            // new Wait(this, 5000),
+            // 
             // // Reset
             // new StopLauncher(this),
             // new StopIntake(this),
             // new StopPusher(this),
+            // new DeactivateTurret(this),
+            // new CloseStopper(this),
 
             // // Move to third line
             // new Move(this, ___, ___, ___),
@@ -45,18 +49,21 @@ public class CloseBlueAuto extends Auto {
             //  // Move back to shooting position, while intaking to not lose artifacts
             // new Move(this, ___, ___, ___), // same as first shooting position
 
-            // // Shoot artifacts
-            // new SpinLauncher(this),
+            // new SpinLauncherFast(this),
+            // new ActivateTurret(this),
             // new WaitForLauncher(this),
-            // new Wait(this, 500),
+            // new OpenStopper(this),
+            // new Wait(this, 750),
             // new SpinIntake(this),
             // new SpinPusher(this),
-            // new Wait(this, 5500),
-
+            // new Wait(this, 5000),
+            // 
             // // Reset
             // new StopLauncher(this),
             // new StopIntake(this),
             // new StopPusher(this),
+            // new DeactivateTurret(this),
+            // new CloseStopper(this),
 
             // // If we have more time 
 

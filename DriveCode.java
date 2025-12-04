@@ -136,6 +136,16 @@ public class DriveCode extends LinearOpMode {
                 led1red.enable(false);
             }
             
+            //limelight
+            LLResult result = launcher.limelight.getLatestResult();
+            
+            //flywheel
+            double flyspeed = (result.getTy() * -58.77193) + 1050.24561;
+            if (flyspeed < 1600){
+                flyspeed = 1600;
+            }
+            launcher.SetVelocity((int)flyspeed);
+            
             //boost
             boost = (int)((gamepad1.right_trigger - gamepad1.left_trigger) * boostSpeed);
             
@@ -157,22 +167,12 @@ public class DriveCode extends LinearOpMode {
             }
             
             //turret
-            LLResult result = launcher.limelight.getLatestResult();
             double tagSize = result.getTa();
             if (tagSize <= 0.6 && tagSize != 0) {
                 launcher.setDistance(Distance.FAR);
             }
             else {
                 launcher.setDistance(Distance.CLOSE);
-            }
-            
-            //flywheel
-            if (gamepad2.left_stick_y > 0) {
-                launcher.SetVelocity(FLYSPEED_CLOSE);
-            } else if (gamepad2.left_stick_y < 0) {
-                launcher.SetVelocity(FLYSPEED_FAR);
-            } else {
-                launcher.SetVelocity(FLYSPEED_MED);
             }
             
             //intake
@@ -198,6 +198,8 @@ public class DriveCode extends LinearOpMode {
 
             telemetry.addData("tag size", result.getTa());
             telemetry.addData("tag x", result.getTx());
+            telemetry.addData("tag y", result.getTy());
+            telemetry.addData("flyspeed", flyspeed);
             telemetry.update();
         }
     }

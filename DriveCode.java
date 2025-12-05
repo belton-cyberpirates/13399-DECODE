@@ -44,38 +44,42 @@ import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 @TeleOp
-
 public class DriveCode extends LinearOpMode {
-    //speeds
+    //flywheel constants
     final int FLYSPEED_CLOSE = 1200;
     final int FLYSPEED_MED = 1560;
     final int FLYSPEED_FAR = 2070;
-    int driveSpeed = 1200;
-    int boostSpeed = 800;
-    int boost = 0;
-    
+    final int FLYSPEED_MIN = 1600;
+
+    //base constants
+    final int driveSpeed = 1200;
+    final int boostSpeed = 800;
+
     //intake
     private DcMotorEx intake;
+
     //servos
     private CRServo outZero;
     private CRServo outOne;
     private Servo stopper;
-    //drivemotors
-    private DcMotorEx driveMotorBL;
-    private DcMotorEx driveMotorFL;
-    private DcMotorEx driveMotorBR;
-    private DcMotorEx driveMotorFR;
+
     //leds
     private LED led1green;
     private LED led2green;
     private LED led1red;
     private LED led2red;
+    
+    //sensors
     private DistanceSensor distance;
     
-    DriveMotors driveMotors;
-    Launcher launcher;
+    //classes
+    private DriveMotors driveMotors;
+    //private Intake intake;
+    private Launcher launcher;
     
+    //variables
     double headingOffset = 0;
+    int boost = 0;
     
 
     @Override
@@ -85,26 +89,20 @@ public class DriveCode extends LinearOpMode {
         outZero = hardwareMap.get(CRServo.class, "out0");
         outOne = hardwareMap.get(CRServo.class, "out1");
         stopper = hardwareMap.get(Servo.class, "stopper");
-        driveMotorBL = hardwareMap.get(DcMotorEx.class, "driveBL");
-        driveMotorFL = hardwareMap.get(DcMotorEx.class, "driveFL");
-        driveMotorBR = hardwareMap.get(DcMotorEx.class, "driveBR");
-        driveMotorFR = hardwareMap.get(DcMotorEx.class, "driveFR");
+
         led1green = hardwareMap.get(LED.class, "led1green");
         led2green = hardwareMap.get(LED.class, "led2green");
         led1red = hardwareMap.get(LED.class, "led1red");
         led2red = hardwareMap.get(LED.class, "led2red");
+
         distance = hardwareMap.get(DistanceSensor.class, "distance");
         
         driveMotors = new DriveMotors(this);
+        //intake = new Intake(this);
         launcher = new Launcher(this);
         
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        
-        driveMotorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveMotorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveMotorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveMotorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         
         waitForStart();
         
@@ -117,11 +115,14 @@ public class DriveCode extends LinearOpMode {
             driveMotors.process();
             launcher.process();
             launcher.setTurretActive(gamepad2.a);
-            
+
+            //gamepad 1
             double oneRightStickX = - gamepad1.right_stick_x;
             double oneRightStickY = gamepad1.right_stick_y;
             double oneLeftStickX = gamepad1.left_stick_x;
             double oneLeftStickY = gamepad1.left_stick_y;
+
+            //gamepad 2
             double twoLeftStickY = gamepad2.left_stick_y;
             double twoRightStickX = gamepad2.right_stick_x;
             
@@ -129,9 +130,11 @@ public class DriveCode extends LinearOpMode {
             if (distance.getDistance(DistanceUnit.CM) < 5) {
                 led1green.enable(false);
                 led2green.enable(false);
+
                 led2red.enable(true);
                 led1red.enable(true);
-            } else {
+            } 
+            else {
                 led2red.enable(false);
                 led1red.enable(false);
             }
@@ -141,9 +144,11 @@ public class DriveCode extends LinearOpMode {
             
             //flywheel
             double flyspeed = (result.getTy() * -58.77193) + 1050.24561;
-            if (flyspeed < 1600){
-                flyspeed = 1600;
+
+            if (flyspeed < FLYSPEED_MIN) {
+                flyspeed = FLYSPEED_MIN;
             }
+            
             launcher.SetVelocity((int)flyspeed);
             
             //boost

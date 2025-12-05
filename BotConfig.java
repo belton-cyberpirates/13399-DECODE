@@ -66,8 +66,8 @@ public class BotConfig {
   public static final int LAUNCHER_VELOCITY_MARGIN = 15;
   public static final int TURRET_MAX_OFFSET = 300;
   
-  public static final double TURRET_OFFSET_FAR_RED = -.8;
-  public static final double TURRET_OFFSET_FAR_BLUE = .6;
+  public static final double TURRET_OFFSET_FAR_RED = -0.8;
+  public static final double TURRET_OFFSET_FAR_BLUE = 3;
   public static final double TURRET_OFFSET_CLOSE_BLUE = -0.5; // test to find
   public static final double TURRET_OFFSET_CLOSE_RED = 0.5; // test to find
 

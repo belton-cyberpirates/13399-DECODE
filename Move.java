@@ -49,4 +49,8 @@ public class Move extends Action {
         return auto.driveMotors.isDone() || (expectedTime != 0 && startTime.time() >= expectedTime);
     }
 
+    public void process() {
+        auto.telemetry.addData("Waiting for launcher...", "");
+    }
+
 }

@@ -38,7 +38,7 @@ public class DriveMotors {
     public static PIDController distanceSensorPidController = new PIDController(0, 0, 0);
     public static PIDController forwardPidController = new PIDController(0.002, 0.0000005, 0.000085);
     public static PIDController strafePidController = new PIDController(0.0025, 0.00000055, 0.00009);
-    public static PIDController imuPidController = new PIDController(1, 0, 0.001);
+    public static PIDController imuPidController = new PIDController(1.05, 0, 0.001);
 
     static Orientation angles;
 
@@ -162,6 +162,9 @@ public class DriveMotors {
         this.odometry.update();
         deltaTimer.reset();
         
+        auto.telemetry.addData("drivemotors xPos", odometry.getPosX(DistanceUnit.MM));
+        auto.telemetry.addData("drivemotors yPos", odometry.getPosY(DistanceUnit.MM));
+        
         return deltaTime;
     }
 
@@ -251,6 +254,9 @@ public class DriveMotors {
         
         auto.telemetry.addData("drivemotors heading", heading);
         
+        auto.telemetry.addData("drivemotors xPos", odometry.getPosX(DistanceUnit.MM));
+        auto.telemetry.addData("drivemotors yPos", odometry.getPosY(DistanceUnit.MM));
+        
         auto.telemetry.addData("drivemotors xError", xError);
         auto.telemetry.addData("drivemotors yError", yError);
         auto.telemetry.addData("drivemotors angleError", targetHeading - heading);
@@ -318,8 +324,8 @@ public class DriveMotors {
             case ODOMETRY:
                 return odometryTimer.milliseconds() > 750 && 
                     (Math.abs(forwardPidController.lastError) < 20) && // max vertical error - MM
-                    (Math.abs(strafePidController.lastError) < 20) && // max horizontal error - MM
-                    (Math.abs(imuPidController.lastError) < .03); // max angle error - radians
+                    (Math.abs(strafePidController.lastError) < 40) && // max horizontal error - MM
+                    (Math.abs(imuPidController.lastError) < .05); // max angle error - radians
             
             case DISTANCE:
                 return (Math.abs(distanceSensorPidController.lastError) < 5);

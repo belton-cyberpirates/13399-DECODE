@@ -14,4 +14,9 @@ public class WaitForLauncher extends Action {
     public boolean isDone() {
         return this.auto.launcher.isAtVelocity();
     }
+    
+    public void process() {
+        auto.telemetry.addData("Waiting for launcher...", "");
+    }
+
 }

@@ -19,24 +19,24 @@ public class CloseRedAuto extends Auto {
             // NOT FINISHED
                 
             // Move to shooting position
-            // new Move(this, ___, ___, ___),
+            new Move(this,-450, 1120, -135),
             
             // // Shoot preloads
-            // new SpinLauncherFast(this),
-            // new ActivateTurret(this),
-            // new WaitForLauncher(this),
-            // new OpenStopper(this),
-            // new Wait(this, 750),
-            // new SpinIntake(this),
-            // new SpinPusher(this),
-            // new Wait(this, 5000),
-            // 
+            new SpinLauncherFast(this),
+            new ActivateTurret(this),
+            new WaitForLauncher(this),
+            new OpenStopper(this),
+            new Wait(this, 750),
+            new SpinIntake(this),
+            new SpinPusher(this),
+            new Wait(this, 5000),
+            
             // // Reset
-            // new StopLauncher(this),
-            // new StopIntake(this),
-            // new StopPusher(this),
-            // new DeactivateTurret(this),
-            // new CloseStopper(this),
+            new StopLauncher(this),
+            new StopIntake(this),
+            new StopPusher(this),
+            new DeactivateTurret(this),
+            new CloseStopper(this),
 
             // // Move to third line
             // new Move(this, ___, ___, ___),

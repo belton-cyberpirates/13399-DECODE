@@ -15,6 +15,17 @@ public class CloseRedAuto extends Auto {
     public Action[] getActions() {
         
         Action[] launchSequence = {
+            // Move to shooting position
+            new CloseStopper(this),
+            new SpinLauncher(this),
+            new SpinIntake(this),
+            new SpinPusher(this, -1),
+            new Move(this,-635, 940, 0),
+            new StopIntake(this),
+            new Move(this,-635, 940, 45),
+            new ActivateTurret(this),
+            new SpinIntake(this),
+            
             // Shoot artifacts
             new WaitForLauncher(this),
             new OpenStopper(this),
@@ -34,23 +45,12 @@ public class CloseRedAuto extends Auto {
         Action[] actions = {
             // ======================= AUTO START ======================= //
                 
-            // NOT FINISHED
+            // FINISHED
             
             // Set turret offset
             new SetTurretOffsets(this, BotConfig.TURRET_OFFSET_CLOSE_RED, BotConfig.TURRET_OFFSET_FAR_RED),
             new SetLauncherDist(this, Distance.CLOSE),
 
-            // Move to shooting position
-            new CloseStopper(this),
-            new SpinLauncher(this),
-            new SpinIntake(this),
-            new SpinPusher(this, -1),
-            new Move(this,-275, 1020, 0),
-            new StopIntake(this),
-            new Move(this,-275, 1020, 45),
-            new ActivateTurret(this),
-            new SpinIntake(this),
-            
             // Action sequence
             new ActionSequence(this, launchSequence),
 
@@ -61,12 +61,6 @@ public class CloseRedAuto extends Auto {
             new SpinIntake(this),
             new SpinPusher(this, -1),
             new Move(this, -650, 50, 90), 
-
-            // Move back to shooting position, while intaking to not lose artifacts
-            new SpinLauncher(this),
-            new Move(this, -250, 1020, 0), // same as first shooting position
-            new StopIntake(this),
-            new Move(this, -275, 1020, 45),
 
             // Action sequence
             new ActionSequence(this, launchSequence),

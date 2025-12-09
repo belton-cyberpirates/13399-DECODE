@@ -12,22 +12,19 @@ import org.firstinspires.ftc.teamcode.Auto;
 //@Disabled
 public class FarRedAuto extends Auto {
 
-    public Action[] getActions() {
-        Action[] actions = {
-            // ======================= AUTO START ======================= //
-                
-            // FINISHED
-
-            // Set turret offset
-            new SetTurretOffsets(this, BotConfig.TURRET_OFFSET_CLOSE_RED, BotConfig.TURRET_OFFSET_FAR_RED),
-            new SetLauncherDist(this, Distance.FAR),
-
+     public Action[] getActions() {
+        
+        Action[] launchSequence = {
             // Move to shooting position
+            new CloseStopper(this),
+            new SpinLauncher(this),
+            new SpinIntake(this),
+            new SpinPusher(this, -1),
             new Move(this, 180, 0, 0),
-            
-            // Shoot preloads
             new SpinLauncherFast(this),
             new ActivateTurret(this),
+            
+            // Shoot preloads
             new WaitForLauncher(this),
             new OpenStopper(this),
             new Wait(this, 750),
@@ -41,6 +38,19 @@ public class FarRedAuto extends Auto {
             new StopPusher(this),
             new DeactivateTurret(this),
             new CloseStopper(this),
+        };
+
+        Action[] actions = {
+            // ======================= AUTO START ======================= //
+                
+            // FINISHED
+
+            // Set turret offset
+            new SetTurretOffsets(this, BotConfig.TURRET_OFFSET_CLOSE_RED, BotConfig.TURRET_OFFSET_FAR_RED),
+            new SetLauncherDist(this, Distance.FAR),
+
+            // Action sequence
+            new ActionSequence(this, launchSequence),
 
             // Move to first line
             new Move(this, 691, 0, 90),
@@ -51,25 +61,8 @@ public class FarRedAuto extends Auto {
             new SpinPusher(this, -1), 
             new Move(this, 691, -1050, 90),
 
-            // Move back to shooting position, while intaking to not lose artifacts
-            new Move(this,  180, 0, 22, 0.5), // same as first shooting position
-
-            // Shoot artifacts
-            new SpinLauncherFast(this),
-            new ActivateTurret(this),
-            new WaitForLauncher(this),
-            new OpenStopper(this),
-            new Wait(this, 750),
-            new SpinIntake(this),
-            new SpinPusher(this),
-            new Wait(this, 5000),
-            
-            // Reset
-            new StopLauncher(this),
-            new StopIntake(this),
-            new StopPusher(this),
-            new DeactivateTurret(this),
-            new CloseStopper(this),
+            // Action sequence
+            new ActionSequence(this, launchSequence),
 
             // If we have more time 
 

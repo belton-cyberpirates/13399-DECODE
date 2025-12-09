@@ -37,7 +37,7 @@ public class BotConfig {
   public static final double MAX_BOOST = 0.66; // boost maxes out at an additional 60% of the base speed
   public static final double STRAFE_MULT = 1.41;
 
-  public static final int LAUNCHER_VELOCITY = 1500;
+  public static final int LAUNCHER_VELOCITY = 1600;
   public static final int LAUNCHER_FAR_VELOCITY = 2050;
   // ---------------------------------------------------------------------------
 
@@ -66,10 +66,10 @@ public class BotConfig {
   public static final int LAUNCHER_VELOCITY_MARGIN = 15;
   public static final int TURRET_MAX_OFFSET = 300;
   
-  public static final double TURRET_OFFSET_FAR_RED = -0.8;
-  public static final double TURRET_OFFSET_FAR_BLUE = 3;
+  public static final double TURRET_OFFSET_FAR_RED = -0.5;
+  public static final double TURRET_OFFSET_FAR_BLUE = 4.5;
   public static final double TURRET_OFFSET_CLOSE_BLUE = -0.5; // test to find
-  public static final double TURRET_OFFSET_CLOSE_RED = 0.5; // test to find
+  public static final double TURRET_OFFSET_CLOSE_RED = 6; // test to find
 
   public static final double STOPPER_OPEN_POS = 0.47;
   public static final double STOPPER_CLOSE_POS = 0.3;

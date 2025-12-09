@@ -141,6 +141,7 @@ public class Launcher {
         auto.telemetry.addData("Launcher Velocity", launcherPIDFController.lastOutput);
         auto.telemetry.addData("Turret Far Offset", this.turretFarOffset);
         auto.telemetry.addData("Turret Close Offset", this.turretCloseOffset);
+        auto.telemetry.addData("Turret Distance", this.distance);
         
         return deltaTime;
     }

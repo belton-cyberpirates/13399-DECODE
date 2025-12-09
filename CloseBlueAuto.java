@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.BotConfig;
 import org.firstinspires.ftc.teamcode.Auto;
 
 
-@Autonomous(name = "Close Red"/*, preselectTeleOp="Your Drive Code Here"*/)
+@Autonomous(name = "Close Blue"/*, preselectTeleOp="Your Drive Code Here"*/)
 //@Disabled
-public class CloseRedAuto extends Auto {
+public class CloseBlueAuto extends Auto {
 
     public Action[] getActions() {
         
@@ -40,9 +40,9 @@ public class CloseRedAuto extends Auto {
         //     new StopPusher(this),
         //     new DeactivateTurret(this),
         //     new CloseStopper(this),
-        // };
+        };
         
-         Action[] actions = {
+       Action[] actions = {
              // ======================= AUTO START ======================= //
                 
              // FINISHED

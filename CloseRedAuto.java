@@ -19,20 +19,21 @@ public class CloseRedAuto extends Auto {
             new CloseStopper(this),
             new SpinLauncher(this),
             new SpinIntake(this),
-            new SpinPusher(this, -1),
-            new Move(this,-635, 940, 0),
-            new StopIntake(this),
-            new Move(this,-635, 940, 45),
+            // new SpinPusher(this, -1),
+            // new Move(this,-650, 915, 10),
+            // new StopIntake(this),
+            new Move(this,-650, 915, 40, 0.45),
             new ActivateTurret(this),
-            new SpinIntake(this),
+            // new SpinIntake(this),
             
             // Shoot artifacts
             new WaitForLauncher(this),
+            new SpinPusher(this),
             new OpenStopper(this),
             new Wait(this, 500),
             new SpinIntake(this),
             new SpinPusher(this),
-            new Wait(this, 5000),
+            new Wait(this, 3800),
             
             // Reset
             new StopLauncher(this),
@@ -60,7 +61,7 @@ public class CloseRedAuto extends Auto {
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1),
-            new Move(this, -650, 50, 90), 
+            new Move(this, -680, 50, 90), 
 
             // Action sequence
             new ActionSequence(this, launchSequence),
@@ -68,12 +69,16 @@ public class CloseRedAuto extends Auto {
             // If we have more time 
 
             // Move to second line
-            new Move(this, -1295, 800, 90),
+            new Move(this, -1310, 800, 90),
 
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1), 
-            new Move(this, -1295, -100, 90), 
+            new Move(this, -1340, -100, 90),
+
+            new ActionSequence(this, launchSequence),
+
+            new Move(this, -650, 650, 40),
 
             // I don't think we have any chance of shooting these artifacts, if we even have time to grab them
             

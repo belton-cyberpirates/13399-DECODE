@@ -29,6 +29,17 @@ public class Move extends Action {
         this.heading = heading;
         this.speedMult = speedMult;
     }
+    
+    
+    public Move(Auto auto, double xPos, double yPos, double heading, double speedMult, double expectedTime) {
+        this.auto = auto;
+        
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.heading = heading;
+        this.speedMult = speedMult;
+        this.expectedTime = expectedTime;
+    }
         
 
     // public Move(Auto auto, double xPos, double yPos, double heading, double expectedTime) {

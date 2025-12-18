@@ -13,6 +13,6 @@ public class ActivateTurret extends Action {
     }
 
     public boolean isDone() {
-        return auto.launcher.turretPIDController.lastError <= 1 && auto.launcher.turretPIDController.lastError != 0;
+        return true; //auto.launcher.turretPIDController.lastError <= 1 && auto.launcher.turretPIDController.lastError != 0;
     }
 }

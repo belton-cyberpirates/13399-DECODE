@@ -61,7 +61,7 @@ public class Move extends Action {
     }
 
     public void process() {
-        auto.telemetry.addData("Waiting for launcher...", "");
+        auto.telemetry.addData("Waiting for drive motors...", "");
     }
 
 }

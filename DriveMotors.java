@@ -261,14 +261,14 @@ public class DriveMotors {
         auto.telemetry.addData("drivemotors yError", yError);
         auto.telemetry.addData("drivemotors angleError", targetHeading - heading);
         
-        auto.telemetry.addData("drivemotors forwardPower", forwardPower);
-        auto.telemetry.addData("drivemotors horizontalPower", horizontalPower);
-        auto.telemetry.addData("drivemotors anglePower", anglePower);
+        // auto.telemetry.addData("drivemotors forwardPower", forwardPower);
+        // auto.telemetry.addData("drivemotors horizontalPower", horizontalPower);
+        // auto.telemetry.addData("drivemotors anglePower", anglePower);
         
-        auto.telemetry.addData("drivemotors state", this.state);
+        // auto.telemetry.addData("drivemotors state", this.state);
 
         
-        auto.telemetry.addData("device status", odometry.getDeviceStatus());
+        // auto.telemetry.addData("device status", odometry.getDeviceStatus());
         
     }
 
@@ -325,7 +325,7 @@ public class DriveMotors {
                 return odometryTimer.milliseconds() > 750 && 
                     (Math.abs(forwardPidController.lastError) < 20) && // max vertical error - MM
                     (Math.abs(strafePidController.lastError) < 40) && // max horizontal error - MM
-                    (Math.abs(imuPidController.lastError) < .05); // max angle error - radians
+                    (Math.abs(imuPidController.lastError) < .07); // max angle error - radians
             
             case DISTANCE:
                 return (Math.abs(distanceSensorPidController.lastError) < 5);

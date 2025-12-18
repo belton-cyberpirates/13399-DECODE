@@ -75,6 +75,7 @@ public class Launcher {
 
 
     public void SetTurretVelocity(int velocity) {
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turret.setVelocity(velocity);
     }
 

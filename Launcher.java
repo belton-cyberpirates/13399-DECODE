@@ -28,7 +28,8 @@ public class Launcher {
     Servo stopper;
     
     PIDFController launcherPIDFController = new PIDFController(0.0004, 0.008, 0, 0);
-    PIDController turretPIDController = new PIDController(0.0325, 0.000, 0.0);
+    PIDController turretPositionPIDController = new PIDController(0.0, 0.0, 0.0); // tune after tuning the velocity controller
+    PIDFController turretVelocityPIDFController = new PIDFController(0.0, 0.0, 0.0, 0.0); // tune kF to be pretty close before tuning the rest
     
     ElapsedTime deltaTimer = new ElapsedTime();
 
@@ -103,33 +104,13 @@ public class Launcher {
             deltaTime
         );
         
-        
         launcherLeft.setPower(power);
         launcherRight.setPower(-power);
         
-        double turretPosition = turret.getCurrentPosition();
-        
         if (turretActive) {
-            turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            
-            double turretPower = turretPIDController.PIDControl(
-                result.getTx() - (distance == Distance.FAR ? turretFarOffset : turretCloseOffset),
-                deltaTime
-            );
-        
-            if (turret.getCurrentPosition() > BotConfig.TURRET_MAX_OFFSET) {
-                turret.setPower(-.5);
-            } else if (turret.getCurrentPosition() < -BotConfig.TURRET_MAX_OFFSET) {
-                turret.setPower(.5);
-            } else {
-                turret.setPower(turretPower);
-            }
-            
-            auto.telemetry.addData("Turret Power", turretPower);
-            auto.telemetry.addData("Limelight Tx", result.getTx());
-            auto.telemetry.addData("Turret Error", turretPIDController.lastError);
-            
-        } else {
+            runTurret(); 
+        } 
+        else {
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             turret.setVelocity(1000);
         }
@@ -138,12 +119,45 @@ public class Launcher {
         
         auto.telemetry.addData("Launcher Velocity", getVelocity());
         auto.telemetry.addData("Launcher Target Velocity", launcherTargetVelocity);
-        auto.telemetry.addData("Launcher Velocity", launcherPIDFController.lastOutput);
-        auto.telemetry.addData("Turret Far Offset", this.turretFarOffset);
-        auto.telemetry.addData("Turret Close Offset", this.turretCloseOffset);
-        auto.telemetry.addData("Turret Distance", this.distance);
+        auto.telemetry.addData("Launcher Error", launcherPIDFController.lastError);
+        // auto.telemetry.addData("Turret Far Offset", this.turretFarOffset);
+        // auto.telemetry.addData("Turret Close Offset", this.turretCloseOffset);
+        // auto.telemetry.addData("Turret Distance", this.distance);
         
         return deltaTime;
+    }
+
+    private void runTurret() {
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        double turretVelocity = turret.getVelocity()
+
+        double turretTargetVelocity = turretPositionPIDController.PIDControl(
+            result.getTx(),
+            (distance == Distance.FAR ? turretFarOffset : turretCloseOffset),
+            deltaTime
+        );
+        
+        double turretPower = turretVelocityPIDFController.PIDControl(
+            turretTargetVelocity,
+            turretVelocity,
+            deltaTime
+        );
+
+        double turretPosition = turret.getCurrentPosition();
+        if (turretPosition > BotConfig.TURRET_MAX_OFFSET) {
+            turret.setPower(-.5);
+        }
+        else if (turretPosition < -BotConfig.TURRET_MAX_OFFSET) {
+            turret.setPower(.5);
+        }
+        else {
+            turret.setPower(turretPower);
+        }
+        
+        auto.telemetry.addData("Turret Power", turretPower);
+        auto.telemetry.addData("Limelight Tx", result.getTx());
+        auto.telemetry.addData("Turret Error", turretPIDController.lastError);
     }
     
     public int getVelocity() {

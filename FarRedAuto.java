@@ -12,15 +12,15 @@ import org.firstinspires.ftc.teamcode.Auto;
 //@Disabled
 public class FarRedAuto extends Auto {
 
-     public Action[] getActions() {
+    public Action[] getActions() {
         
         Action[] launchSequence = {
             // Move to shooting position
             new CloseStopper(this),
             new SpinLauncher(this),
             new SpinIntake(this),
-            new SpinPusher(this, -1),
-            new Move(this, 180, 0, 0),
+            //new SpinPusher(this, -1),
+            new Move(this, 180, 0, 0, 1, 2),
             new SpinLauncherFast(this),
             new ActivateTurret(this),
             
@@ -58,8 +58,8 @@ public class FarRedAuto extends Auto {
 
             // Intake artifacts
             new SpinIntake(this),
-            new SpinPusher(this, -1), 
-            new Move(this, 691, -1050, 90),
+            //new SpinPusher(this, -1), 
+            new Move(this, 691, -1050, 90, 1, 2),
 
             // Action sequence
             new ActionSequence(this, launchSequence),
@@ -72,8 +72,8 @@ public class FarRedAuto extends Auto {
 
             // Intake artifacts
             new SpinIntake(this),
-            new SpinPusher(this, -1), 
-            new Move(this, 1300, -1050, 90), 
+            //new SpinPusher(this, -1), 
+            new Move(this, 1300, -1050, 90, 1, 2), 
 
             // I don't think we have any chance of shooting these artifacts, if we even have time to grab them
             

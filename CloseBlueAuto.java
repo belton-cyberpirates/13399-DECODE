@@ -22,7 +22,7 @@ public class CloseBlueAuto extends Auto {
             // new SpinPusher(this, -1),
             // new Move(this,-650, 915, 10),
             // new StopIntake(this),
-            new Move(this,-650, -915, -40, 0.45),
+            new Move(this,-650, -915, -40, 0.45, 2),
             new ActivateTurret(this),
             // new SpinIntake(this),
             
@@ -61,7 +61,7 @@ public class CloseBlueAuto extends Auto {
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1),
-            new Move(this, -680, -50, -90), 
+            new Move(this, -680, -50, -90, 1, 2), 
 
             // Action sequence
             new ActionSequence(this, launchSequence),
@@ -74,7 +74,7 @@ public class CloseBlueAuto extends Auto {
             // Intake artifacts
             new SpinIntake(this),
             new SpinPusher(this, -1), 
-            new Move(this, -1340, 100, -90),
+            new Move(this, -1340, 100, -90, 1, 2),
 
             new ActionSequence(this, launchSequence),
 

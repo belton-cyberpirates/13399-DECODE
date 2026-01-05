@@ -134,8 +134,8 @@ public class Launcher {
         double turretVelocity = turret.getVelocity()
 
         double turretTargetVelocity = turretPositionPIDController.PIDControl(
-            result.getTx(),
             (distance == Distance.FAR ? turretFarOffset : turretCloseOffset),
+            result.getTx(),
             deltaTime
         );
         

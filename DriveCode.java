@@ -50,6 +50,8 @@ public class DriveCode extends LinearOpMode {
     final int FLYSPEED_MED = 1560;
     final int FLYSPEED_FAR = 2070;
     final int FLYSPEED_MIN = 1600;
+    final double[] TAG_VALS =   {-0.5, -5,   -7,   -10}; //TODO find real values
+    final int[] VELOCITY_VALS = {1500, 1750, 1900, 2000}; //TODO find real values
 
     //base constants
     final int driveSpeed = 1200;
@@ -143,13 +145,45 @@ public class DriveCode extends LinearOpMode {
             LLResult result = launcher.limelight.getLatestResult();
             
             //flywheel
-            double flyspeed = (result.getTy() * -58.77193) + 1050.24561;
+            double currentTagY = result.getTy(); // experiment with result.getTa()
 
-            if (flyspeed < FLYSPEED_MIN) {
-                flyspeed = FLYSPEED_MIN;
+            // find the tag vals that this value is between
+            int lowerTagIndex = 0;
+            int higherTagIndex = 0;
+            for (int i = TAG_VALS.length-1; i >= 0; i--) {
+                double tagY = TAG_VALS[i];
+
+                if (tagY < currentTagY) {
+                    lowerTagIndex = i;
+                    higherTagIndex = i + 1;
+                }
             }
+
+            // find the ratio this value is between the tag vals
+            double lowerTagVal = TAG_VALS[lowerTagIndex];
+            double higherTagVal = TAG_VALS[higherTagIndex];
+
+            double tagSliceLength = (higherTagVal - lowerTagVal);
+            double tagSliceCoveredLength = (tagY - lowerTagVal);
+            double interpMult = (tagSliceCoveredLength / tagSliceLength);
+
+            // map the ratio to the matching velocity vals 
+            int lowerVelocityVal = VELOCITY_VALS[lowerTagIndex];
+            int higherVelocityVal = VELOCITY_VALS[higherTagIndex];
+
+            int velocitySliceLength = (higherVelocityVal - lowerVelocityVal);
+            int velocitySliceCoveredLength = (int)(interpMult * velocitySliceLength);
+
+            // get target velocity
+            int targetVelocity = lowerVelocityVal + velocitySliceCoveredLength;
+
+            // double flyspeed = (result.getTy() * -58.77193) + 1050.24561;
+
+            // if (flyspeed < FLYSPEED_MIN) {
+            //     flyspeed = FLYSPEED_MIN;
+            // }
             
-            launcher.SetVelocity((int)flyspeed);
+            launcher.SetVelocity(targetVelocity);
             
             //boost
             boost = (int)((gamepad1.right_trigger - gamepad1.left_trigger) * boostSpeed);

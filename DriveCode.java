@@ -50,8 +50,8 @@ public class DriveCode extends LinearOpMode {
     final int FLYSPEED_MED = 1560;
     final int FLYSPEED_FAR = 2070;
     final int FLYSPEED_MIN = 1600;
-    final double[] TAG_VALS =   {-0.5, -5,   -7,   -10}; //TODO find real values
-    final int[] VELOCITY_VALS = {1500, 1750, 1900, 2000}; //TODO find real values
+    final double[] TAG_VALS =   {3.08, 2.8,  2.35, 1.5,  1.2,  0.97, 0.83, 0.4,  0.31, 0.28}; //TODO find real values
+    final int[] VELOCITY_VALS = {1500, 1550, 1585, 1600, 1625, 1650, 1675, 1825, 1875, 1900}; //TODO find real values
 
     //base constants
     final int driveSpeed = 1200;
@@ -144,7 +144,7 @@ public class DriveCode extends LinearOpMode {
             //limelight
             LLResult result = launcher.limelight.getLatestResult();
             
-            //flywheel
+            // flywheel
             double currentTagY = result.getTy(); // experiment with result.getTa()
 
             // find the tag vals that this value is between
@@ -164,7 +164,7 @@ public class DriveCode extends LinearOpMode {
             double higherTagVal = TAG_VALS[higherTagIndex];
 
             double tagSliceLength = (higherTagVal - lowerTagVal);
-            double tagSliceCoveredLength = (tagY - lowerTagVal);
+            double tagSliceCoveredLength = (currentTagY - lowerTagVal);
             double interpMult = (tagSliceCoveredLength / tagSliceLength);
 
             // map the ratio to the matching velocity vals 
@@ -183,27 +183,28 @@ public class DriveCode extends LinearOpMode {
             //     flyspeed = FLYSPEED_MIN;
             // }
             
-            launcher.SetVelocity(targetVelocity);
+            // launcher.SetVelocity(targetVelocity);
+            launcher.SetVelocity((int)targetVelocity);
             
             //boost
             boost = (int)((gamepad1.right_trigger - gamepad1.left_trigger) * boostSpeed);
             
             //drive
-            if (gamepad1.a) {
+            // if (gamepad1.a) {
                 driveMotors.DriveFieldCentric(gamepad1.left_stick_x,
                     gamepad1.left_stick_y, 
                     gamepad1.right_stick_x, 
                     driveSpeed + boost,
                     headingOffset
                 );
-            }
-            else {
-                driveMotors.Drive(gamepad1.left_stick_x,
-                    gamepad1.left_stick_y, 
-                    gamepad1.right_stick_x, 
-                    driveSpeed + boost
-                );
-            }
+            // }
+            // else {
+            //     driveMotors.Drive(gamepad1.left_stick_x,
+            //         gamepad1.left_stick_y, 
+            //         gamepad1.right_stick_x, 
+            //         driveSpeed + boost
+            //     );
+            // }
             
             //turret
             double tagSize = result.getTa();
@@ -238,7 +239,8 @@ public class DriveCode extends LinearOpMode {
             telemetry.addData("tag size", result.getTa());
             telemetry.addData("tag x", result.getTx());
             telemetry.addData("tag y", result.getTy());
-            telemetry.addData("flyspeed", flyspeed);
+            telemetry.addData("flywheel target velocity", targetVelocity);
+            // telemetry.addData("flyspeed", flyspeed);
             telemetry.update();
         }
     }

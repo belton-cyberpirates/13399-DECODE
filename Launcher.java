@@ -17,7 +17,6 @@ import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 public class Launcher {
-
     private LinearOpMode auto;
 
     public DcMotorEx launcherLeft;
@@ -28,8 +27,8 @@ public class Launcher {
     Servo stopper;
     
     PIDFController launcherPIDFController = new PIDFController(0.0004, 0.008, 0, 0);
-    PIDController turretPositionPIDController = new PIDController(0.0, 0.0, 0.0); // tune after tuning the velocity controller
-    PIDFController turretVelocityPIDFController = new PIDFController(0.0, 0.0, 0.0, 0.0); // tune kF to be pretty close before tuning the rest
+    PIDController turretPositionPIDController = new PIDController(55, 50, 0.04, true, 8, 0.5); // tune after tuning the velocity controller
+    PIDFController turretVelocityPIDFController = new PIDFController(0.0007, 0.0001, 0.00005, 0.000005); // tune kF to be pretty close before tuning the rest
     
     ElapsedTime deltaTimer = new ElapsedTime();
 
@@ -91,10 +90,9 @@ public class Launcher {
             launcherRight.getVelocity() < this.launcherTargetVelocity + BotConfig.LAUNCHER_VELOCITY_MARGIN;
     }
     
-    public double process(){
-        
-        LLResult result = limelight.getLatestResult();
-            
+    public double process() {
+        auto.telemetry.addData("Limelight Tx", limelight.getLatestResult().getTx());
+        auto.telemetry.addData("Turret Velocity", turret.getVelocity());
         double deltaTime = deltaTimer.seconds();
         
         double launcherVelocity = launcherRight.getVelocity();
@@ -105,11 +103,11 @@ public class Launcher {
             deltaTime
         );
         
-        launcherLeft.setPower(power);
+        launcherLeft.setPower(power); //TODO uncomment
         launcherRight.setPower(-power);
         
         if (turretActive) {
-            runTurret(); 
+            runTurret(deltaTime); 
         } 
         else {
             turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -118,9 +116,9 @@ public class Launcher {
         
         deltaTimer.reset();
         
-        auto.telemetry.addData("Launcher Velocity", getVelocity());
-        auto.telemetry.addData("Launcher Target Velocity", launcherTargetVelocity);
-        auto.telemetry.addData("Launcher Error", launcherPIDFController.lastError);
+        // auto.telemetry.addData("Launcher Velocity", getVelocity());
+        // auto.telemetry.addData("Launcher Target Velocity", launcherTargetVelocity);
+        // auto.telemetry.addData("Launcher Error", launcherPIDFController.lastError);
         // auto.telemetry.addData("Turret Far Offset", this.turretFarOffset);
         // auto.telemetry.addData("Turret Close Offset", this.turretCloseOffset);
         // auto.telemetry.addData("Turret Distance", this.distance);
@@ -128,18 +126,20 @@ public class Launcher {
         return deltaTime;
     }
 
-    private void runTurret() {
+    private void runTurret(double deltaTime) {
+        LLResult result = limelight.getLatestResult();
+        
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double turretVelocity = turret.getVelocity()
+        double turretVelocity = turret.getVelocity();
 
         double turretTargetVelocity = turretPositionPIDController.PIDControl(
             (distance == Distance.FAR ? turretFarOffset : turretCloseOffset),
-            result.getTx(),
+            -result.getTx(),
             deltaTime
         );
         
-        double turretPower = turretVelocityPIDFController.PIDControl(
+        double turretPower = turretVelocityPIDFController.PIDFControl(
             turretTargetVelocity,
             turretVelocity,
             deltaTime
@@ -157,8 +157,9 @@ public class Launcher {
         }
         
         auto.telemetry.addData("Turret Power", turretPower);
-        auto.telemetry.addData("Limelight Tx", result.getTx());
-        auto.telemetry.addData("Turret Error", turretPIDController.lastError);
+        auto.telemetry.addData("Turret Error", turretPositionPIDController.lastError);
+        auto.telemetry.addData("Turret Target Velocity", turretTargetVelocity);
+        //auto.telemetry.addData("Turret Position", turretPosition);
     }
     
     public int getVelocity() {

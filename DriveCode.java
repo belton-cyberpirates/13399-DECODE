@@ -50,8 +50,8 @@ public class DriveCode extends LinearOpMode {
     final int FLYSPEED_MED = 1560;
     final int FLYSPEED_FAR = 2070;
     final int FLYSPEED_MIN = 1600;
-    final double[] TAG_VALS =   {3.08, 2.8,  2.35, 1.5,  1.2,  0.97, 0.83, 0.4,  0.31, 0.28}; //TODO find real values
-    final int[] VELOCITY_VALS = {1500, 1550, 1585, 1600, 1625, 1650, 1675, 1825, 1875, 1900}; //TODO find real values
+    final double[] TAG_VALS =   {0.28, 0.31, 0.4,  0.83, 0.97, 1.2,  1.5,  2.35, 2.8,  3.08, 2000000}; 
+    final int[] VELOCITY_VALS = {1900, 1875, 1825, 1675, 1650, 1625, 1600, 1585, 1550, 1500, 1500}; 
 
     //base constants
     final int driveSpeed = 1200;
@@ -145,7 +145,7 @@ public class DriveCode extends LinearOpMode {
             LLResult result = launcher.limelight.getLatestResult();
             
             // flywheel
-            double currentTagY = result.getTy(); // experiment with result.getTa()
+            double currentTagY = result.getTa(); // experiment with result.getTa()
 
             // find the tag vals that this value is between
             int lowerTagIndex = 0;
@@ -156,6 +156,7 @@ public class DriveCode extends LinearOpMode {
                 if (tagY < currentTagY) {
                     lowerTagIndex = i;
                     higherTagIndex = i + 1;
+                    break;
                 }
             }
 
@@ -168,11 +169,20 @@ public class DriveCode extends LinearOpMode {
             double interpMult = (tagSliceCoveredLength / tagSliceLength);
 
             // map the ratio to the matching velocity vals 
-            int lowerVelocityVal = VELOCITY_VALS[lowerTagIndex];
-            int higherVelocityVal = VELOCITY_VALS[higherTagIndex];
+            int lowerVelocityVal = VELOCITY_VALS[higherTagIndex];
+            int higherVelocityVal = VELOCITY_VALS[lowerTagIndex];
+            
+            telemetry.addData("lower tag value", lowerTagVal);
+            telemetry.addData("higher tag value", higherTagVal);
+            telemetry.addData("lower velocity value", lowerVelocityVal);
+            telemetry.addData("higher velocity value", higherVelocityVal);
 
             int velocitySliceLength = (higherVelocityVal - lowerVelocityVal);
-            int velocitySliceCoveredLength = (int)(interpMult * velocitySliceLength);
+            int velocitySliceCoveredLength = (int)((1 - interpMult) * velocitySliceLength);
+            
+            telemetry.addData("velocity slice length", velocitySliceLength);
+            telemetry.addData("velocity slice covered", velocitySliceCoveredLength);
+            telemetry.addData("inter mult", interpMult);
 
             // get target velocity
             int targetVelocity = lowerVelocityVal + velocitySliceCoveredLength;
@@ -239,6 +249,7 @@ public class DriveCode extends LinearOpMode {
             telemetry.addData("tag size", result.getTa());
             telemetry.addData("tag x", result.getTx());
             telemetry.addData("tag y", result.getTy());
+            telemetry.addData("tag area", result.getTa());
             telemetry.addData("flywheel target velocity", targetVelocity);
             // telemetry.addData("flyspeed", flyspeed);
             telemetry.update();
